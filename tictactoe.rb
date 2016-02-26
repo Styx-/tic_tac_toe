@@ -29,6 +29,13 @@ class Board
     bottom_top_diag_taken?  || top_bottom_diag_taken?
   end
 
+  def tie?
+    @board_values.each_index do |index|
+      return false if !slot_occupied?(index)
+    end
+    true
+  end
+
   def the_winner
     return @board_values[0] if left_column_taken? || top_row_taken?  || top_bottom_diag_taken?
     return @board_values[1] if middle_column_taken?
@@ -99,17 +106,19 @@ def ttt_game
     board.x_move(gets.chomp.to_i - 1)
 
     board.display_board
-    break if board.game_over?
+    break if board.game_over? || board.tie?
 
     puts "O's where would you like to play?"
     board.o_move(gets.chomp.to_i - 1)
 
-    break if board.game_over?
+    break if board.game_over? || board.tie?
   end
-
-  winner = board.the_winner
-
-  puts "#{winner}'s win!"
+  if board.tie?
+    puts "It was a tie!"
+  else
+    winner = board.the_winner
+    puts "#{winner}'s win!"
+  end
 end
 
 
